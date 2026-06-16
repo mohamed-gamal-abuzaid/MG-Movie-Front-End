@@ -23,7 +23,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // لقطة السينيور: أول ما الأبلكيشن يفتح، بنشوف هل فيه توكن متسيفة قبل كده؟
     const storedUser = localStorage.getItem("mg_user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));

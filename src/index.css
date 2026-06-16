@@ -7,13 +7,45 @@
 html {
   background-color: #f8fafc; 
   color: #0f172a;
+  color-scheme: light;
 }
 
 html.dark {
   background-color: #020617; 
   color: #f8fafc;
+  color-scheme: dark;
 }
 
+/* Light mode scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+html.dark ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
 
 @utility scrollbar-hide {
   &::-webkit-scrollbar {

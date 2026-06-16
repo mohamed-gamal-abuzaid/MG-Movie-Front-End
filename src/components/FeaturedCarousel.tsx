@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // 👈 استيراد الـ Navigation
 import type { Movie } from "../types/movie";
 import { Star, Play, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -8,6 +9,7 @@ interface CarouselProps {
 
 export const FeaturedCarousel: React.FC<CarouselProps> = ({ movies }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const navigate = useNavigate(); // 👈 هوك التنقل
 
   useEffect(() => {
     if (movies.length === 0) return;
@@ -18,39 +20,52 @@ export const FeaturedCarousel: React.FC<CarouselProps> = ({ movies }) => {
   }, [currentIndex, movies]);
 
   if (!movies || movies.length === 0) {
-    return <div className="h-[450px] md:h-[550px] w-full bg-slate-900 animate-pulse"></div>;
+    return <div className="h-[450px] md:h-[550px] w-full bg-slate-200 dark:bg-slate-900 animate-pulse"></div>;
   }
 
   const currentMovie = movies[currentIndex];
   const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/original";
 
-  // تظبيط الـ Mapping الآمن
   const backdrop = (currentMovie as any)?.backdrop_path || currentMovie?.backdropPath;
   const ratingValue = (currentMovie as any)?.vote_average || currentMovie?.rating;
   const releaseDateValue = (currentMovie as any)?.release_date || currentMovie?.releaseDate;
 
+  // 🎯 دالة الانتقال لصفحة التفاصيل عند الضغط على الصورة أو المحتوى
+  const handleDetailsNavigation = () => {
+    navigate(`/movie/${currentMovie.id}`);
+  };
+
+  // 🎯 دالة تشغيل التريلر
+  const handleWatchTrailer = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 👈 تريكة سينيور: منع انتشار الحدث للأب (الـ div كلو) عشان ما يفتحش الصفحة مرتين
+    
+    // الحل الأجمد: نوديه لصفحة التفاصيل ونبعت معاه flag إنه عايز يشوف التريلر علطول
+    navigate(`/movie/${currentMovie.id}`, { state: { autoplayTrailer: true } });
+  };
+
   return (
-    <div className="relative h-[450px] md:h-[550px] w-full overflow-hidden bg-slate-950">
-      {/* صورة الخلفية العريضة */}
+    // 💡 تعديل 1: إضافة cursor-pointer و onClick على الـ Container الرئيسي عشان الضغط على الصورة يدخل لـ Details
+    <div 
+      onClick={handleDetailsNavigation}
+      className="relative h-[450px] md:h-[550px] w-full overflow-hidden bg-slate-950 cursor-pointer group"
+    >
       <div
-        className="absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out scale-105"
+        className="absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out scale-105 group-hover:scale-110" // زوم خفيف عند الـ hover
         style={{ 
           backgroundImage: backdrop 
             ? `url(${TMDB_IMAGE_BASE}${backdrop})` 
             : `url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1000')`
         }}
       >
-        {/* ماسك التعتيم (Gradient Overlays) ليعطي طابع Premium */}
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/70 to-transparent"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
       </div>
 
-      {/* بيانات الفيلم المكتوبة */}
       <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-16 text-white z-10 max-w-2xl">
         <span className="bg-indigo-600 text-xs font-bold tracking-widest uppercase px-3 py-1 rounded-md w-max mb-4 shadow-lg shadow-indigo-600/30">
           Featured
         </span>
-        <h1 className="text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-md">
+        <h1 className="text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-md group-hover:text-indigo-400 transition-colors">
           {currentMovie.title}
         </h1>
         
@@ -69,21 +84,25 @@ export const FeaturedCarousel: React.FC<CarouselProps> = ({ movies }) => {
           {currentMovie.description}
         </p>
 
-        <button className="flex items-center bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6 py-3 rounded-xl transition w-max shadow-lg shadow-indigo-600/20 active:scale-95">
+        {/* 💡 تعديل 2: إضافة الـ onClick الخاص بالـ Trailer ومقاطعة الـ Event Propagation */}
+        <button 
+          onClick={handleWatchTrailer}
+          className="flex items-center bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6 py-3 rounded-xl transition w-max shadow-lg shadow-indigo-600/20 active:scale-95 z-30"
+        >
           <Play className="w-5 h-5 mr-2 fill-current" /> Watch Trailer
         </button>
       </div>
 
-      {/* أزرار الأسهم يمين وشمال */}
+      {/* أزرار الكاروسيل يمين وشمال */}
       <button 
-        onClick={() => setCurrentIndex((prev) => (prev - 1 + movies.length) % movies.length)} 
-        className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-slate-900/50 hover:bg-indigo-600 text-white transition z-20"
+        onClick={(e) => { e.stopPropagation(); setCurrentIndex((prev) => (prev - 1 + movies.length) % movies.length); }} 
+        className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-slate-900/50 dark:bg-slate-900/70 hover:bg-indigo-600 text-white transition z-20"
       >
         <ChevronLeft className="w-6 h-6" />
       </button>
       <button 
-        onClick={() => setCurrentIndex((prev) => (prev + 1) % movies.length)} 
-        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-slate-900/50 hover:bg-indigo-600 text-white transition z-20"
+        onClick={(e) => { e.stopPropagation(); setCurrentIndex((prev) => (prev + 1) % movies.length); }} 
+        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-slate-900/50 dark:bg-slate-900/70 hover:bg-indigo-600 text-white transition z-20"
       >
         <ChevronRight className="w-6 h-6" />
       </button>

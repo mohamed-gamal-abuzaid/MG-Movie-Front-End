@@ -7,7 +7,6 @@ export interface Movie {
   rating?: number;
   releaseDate?: string;
   genreIds?: number[];
-  // إضافة دعم الـ Snake Case اللي راجع من الـ Spring Boot بسبب الـ JsonProperty
   poster_path?: string;
   backdrop_path?: string;
   vote_average?: number;

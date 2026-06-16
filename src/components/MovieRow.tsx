@@ -36,7 +36,7 @@ export const MovieRow: React.FC<MovieRowProps> = ({ title, movies }) => {
       <div className="relative">
         <button
           onClick={() => handleScroll("left")}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-30 h-24 w-10 flex items-center justify-center rounded-r-xl bg-slate-950/70 border-y border-r border-slate-800 text-slate-400 hover:text-white opacity-0 group-hover/row:opacity-100 transition-all duration-300 hidden md:flex backdrop-blur-sm"
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-30 h-24 w-10 flex items-center justify-center rounded-r-xl bg-white/50 dark:bg-slate-950/70 border-y border-r border-slate-300 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white opacity-0 group-hover/row:opacity-100 transition-all duration-300 hidden md:flex backdrop-blur-sm"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
@@ -52,7 +52,7 @@ export const MovieRow: React.FC<MovieRowProps> = ({ title, movies }) => {
 
         <button
           onClick={() => handleScroll("right")}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-30 h-24 w-10 flex items-center justify-center rounded-l-xl bg-slate-950/70 border-y border-l border-slate-800 text-slate-400 hover:text-white opacity-0 group-hover/row:opacity-100 transition-all duration-300 hidden md:flex backdrop-blur-sm"
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-30 h-24 w-10 flex items-center justify-center rounded-l-xl bg-white/50 dark:bg-slate-950/70 border-y border-l border-slate-300 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white opacity-0 group-hover/row:opacity-100 transition-all duration-300 hidden md:flex backdrop-blur-sm"
         >
           <ChevronRight className="w-6 h-6" />
         </button>
