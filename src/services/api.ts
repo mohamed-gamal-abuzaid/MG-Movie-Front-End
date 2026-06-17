@@ -1,8 +1,10 @@
 import axios from "axios";
 
 
+const backendUrl = import.meta.env.VITE_API_URL || "https://mg-movie-production.up.railway.app";
+
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api`,
+  baseURL: `${backendUrl}/api`,
   timeout: 10000,
 });
 
